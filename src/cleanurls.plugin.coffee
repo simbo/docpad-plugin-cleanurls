@@ -115,7 +115,7 @@ module.exports = (BasePlugin) ->
 
 					# If the primary out path is not our desired primary url out path
 					# then update it with the redirect template
-					# and update our primaru url out path with the actual content
+					# and update our primary url out path with the actual content
 					if primaryUrlOutPath isnt primaryOutPath
 						addWriteTask(primaryUrlOutPath, document.getOutContent(), encoding)
 						redirectOutPaths.push(primaryOutPath)
