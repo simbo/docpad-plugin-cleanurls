@@ -27,6 +27,7 @@ module.exports = (BasePlugin) ->
 			collectionName: 'html'
 
 			static: false
+			staticRedirectFile: true
 
 			environments:
 				static:
@@ -98,6 +99,9 @@ module.exports = (BasePlugin) ->
 				addWriteTask = (outPath, outContent, encoding) ->
 					tasks.addTask (complete) ->
 						return safefs.writeFile(outPath, outContent, encoding, complete)
+				addUnlinkTask = (path) ->
+					tasks.addTask (complete) ->
+						return safefs.unlink(path, complete)
 
 				# Cycle
 				collection.forEach (document) ->
@@ -126,7 +130,11 @@ module.exports = (BasePlugin) ->
 						if (redirectOutPath in redirectOutPaths) is false and redirectOutPath isnt primaryUrlOutPath
 							redirectOutPaths.push(redirectOutPath)
 					for redirectOutPath in redirectOutPaths
-						addWriteTask(redirectOutPath, redirectContent, encoding)
+						if config.staticRedirectFile is true
+							addWriteTask(redirectOutPath, redirectContent, encoding)
+						else
+							addUnlinkTask(redirectOutPath)
+
 
 				# Fire
 				tasks.run()
